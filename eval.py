@@ -41,3 +41,56 @@ def evaluate_months(entries):
 
     print(table_month)
     print(table_year)
+
+
+def evaluate_weekdays(entries):
+    week_array = [0, 0, 0, 0, 0, 0, 0]  # [0] = monday, [1] = tuesday, ...
+    nr_of_weeks = 51
+
+    # calculate total time for each weekday
+    for entry in entries:
+        week_array[entry.datetime_played.weekday()] += entry.ms_played
+
+    table_day_of_week = PrettyTable(['Day of Week', 'Total [h]', 'Avg [h]'])
+    table_day_of_week.title = 'Day of week results'
+
+    for day_of_week in range(0, 7):
+        total_day_of_week = ms_to_hours(week_array[day_of_week], 2)
+        avg_day_of_week = round(total_day_of_week / nr_of_weeks, 2)
+
+        table_day_of_week.add_row([day_of_week, total_day_of_week, avg_day_of_week])
+
+    print(table_day_of_week)
+
+    table_weekday_vs_weekend = PrettyTable(['Type', 'Avg [h]'])
+    table_weekday_vs_weekend.title = 'Weekday vs Weekend results'
+
+    total_weekday = 0
+    total_weekend = 0
+    total_weekday_and_weekend = 0
+
+    # calculate time for weekdays
+    for i in range(0, 5):
+        total_weekday += ms_to_hours(week_array[i], 2)
+
+    # calculate avg time for weekends
+    for i in range(5, 7):
+        total_weekend += ms_to_hours(week_array[i], 2)
+
+    # calculate avg time total
+    for i in range(0, 7):
+        total_weekday_and_weekend += ms_to_hours(week_array[i], 2)
+
+    avg_weekday = round(total_weekday / nr_of_weeks / 5, 2)
+    avg_weekend = round(total_weekend / nr_of_weeks / 2, 2)
+    avg_weekday_and_weekend = round(total_weekday_and_weekend / nr_of_weeks / 7, 2)
+
+    table_weekday_vs_weekend.add_rows(
+        [
+            ['Weekdays', avg_weekday],
+            ['Weekends', avg_weekend],
+            ['Both', avg_weekday_and_weekend]
+        ]
+    )
+
+    print(table_weekday_vs_weekend)
