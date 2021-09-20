@@ -44,6 +44,7 @@ def evaluate_months(entries):
 
 
 def evaluate_weekdays(entries):
+
     week_array = [0, 0, 0, 0, 0, 0, 0]  # [0] = monday, [1] = tuesday, ...
     nr_of_weeks = 51
 
@@ -125,3 +126,81 @@ def evaluate_extreme_days(entries):
 
     # display table
     print(table_extreme_days)
+
+
+def evaluate_daily_average(entries):
+
+    dictionary = {}  # associative map with date and time played on date
+    bucket_hourly = [0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0,
+                     0, 0, 0, 0, 0, 0]
+    bucket_relative = [0, 0, 0, 0, 0, 0]
+
+    table_hourly = PrettyTable(['Nr of hours', 'Days total', 'Days relative [%]', 'Days relative cum [%]'])
+    table_hourly.title = 'Detailed hour for hour'
+    table_relative = PrettyTable(['Categorisation', 'Days total', 'Days relative [%]'])
+    table_relative.title = 'Categorised'
+
+    # calculate listening time per day
+    for entry in entries:
+        if entry.datetime_played.date() in dictionary:
+            dictionary[entry.datetime_played.date()] += entry.ms_played
+        else:
+            dictionary[entry.datetime_played.date()] = entry.ms_played
+
+    # iterate through map and check what buckets days go into
+    for date in dictionary:
+        value = dictionary[date]
+        value = round(ms_to_hours(value, 2))
+        bucket_hourly[value] += 1
+        bucket_relative[_hour_to_relative(value)] += 1
+
+    i = 0
+    relative_cum = 0
+    # write absolute bucket into table
+    for oop in bucket_hourly:
+        relative = oop / 365 * 100
+        relative_cum += relative
+        table_hourly.add_row([i, oop, round(relative, 2), round(100 - relative_cum, 2)])
+        i += 1
+
+    i = 0
+    relative_cum = 0
+    # write relative bucket into table
+    for oop in bucket_relative:
+        relative = oop / 365 * 100
+        relative_cum += relative
+        category = ''
+        if i == 0:
+            category = 'basically nothing'
+        elif i == 1:
+            category = 'slow day'
+        elif i == 2:
+            category = 'average day'
+        elif i == 3:
+            category = 'intense day'
+        elif i == 4:
+            category = 'insane day'
+        elif i == 5:
+            category = 'WTF day'
+        table_relative.add_row([category, oop, round(relative, 2)])
+        i += 1
+
+    print(table_hourly)
+    print(table_relative)
+
+
+def _hour_to_relative(hours_listened: int):
+    if hours_listened < 2.5:
+        return 0  # basically nothing
+    elif hours_listened < 5:
+        return 1  # slow day
+    elif hours_listened < 7.5:
+        return 2  # average day
+    elif hours_listened < 10:
+        return 3  # intense day
+    elif hours_listened < 12.5:
+        return 4  # insane day
+    elif hours_listened >= 12.5:
+        return 5  # WTF day

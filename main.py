@@ -8,4 +8,5 @@ if __name__ == '__main__':
 
     # eval.evaluate_months(entries)
     # eval.evaluate_weekdays(entries)
-    eval.evaluate_extreme_days(entries)
+    # eval.evaluate_extreme_days(entries)
+    eval.evaluate_daily_average(entries)
