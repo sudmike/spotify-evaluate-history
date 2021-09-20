@@ -7,4 +7,5 @@ if __name__ == '__main__':
     entries += get_entries_from_json_file('StreamingHistoryXXX.json')
 
     # eval.evaluate_months(entries)
-    eval.evaluate_weekdays(entries)
+    # eval.evaluate_weekdays(entries)
+    eval.evaluate_extreme_days(entries)

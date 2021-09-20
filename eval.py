@@ -94,3 +94,34 @@ def evaluate_weekdays(entries):
     )
 
     print(table_weekday_vs_weekend)
+
+
+def evaluate_extreme_days(entries):
+
+    dictionary = {}  # associative map with date and time played on date
+    array_max = []  # array of days with most listening time
+
+    table_extreme_days = PrettyTable(['Day', 'Time listened [h]', 'Day of week'])
+    table_extreme_days.title = 'Extreme days'
+
+    # calculate listening time per day
+    for entry in entries:
+        if entry.datetime_played.date() in dictionary:
+            dictionary[entry.datetime_played.date()] += entry.ms_played
+        else:
+            dictionary[entry.datetime_played.date()] = entry.ms_played
+
+    # isolate days with most listening time
+    for i in range(0, 15 if len(dictionary) > 15 else len(dictionary)):
+        max_key = max(dictionary, key=dictionary.get)
+        array_max.append([max_key, dictionary[max_key]])
+        del dictionary[max_key]
+
+    # write days with most listening time into table
+    for pair in array_max:
+        date = pair[0]
+        value = pair[1]
+        table_extreme_days.add_row([date, ms_to_hours(value, 3), date.strftime('%A')])
+
+    # display table
+    print(table_extreme_days)
