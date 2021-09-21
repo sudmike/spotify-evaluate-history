@@ -4,7 +4,7 @@ from history_entry import HistoryEntry
 
 
 def get_entries_from_json_file(filename: str):
-    with open(('./jsonFiles/' + filename), encoding='utf8') as jsonFile:
+    with open(('./files/' + filename), encoding='utf8') as jsonFile:
         json_objects = json.load(jsonFile)
         jsonFile.close()
 
@@ -27,3 +27,24 @@ def get_entries_from_json_file(filename: str):
         array.append(history_entry)
 
     return array
+
+
+def generate_json_file_from_entries(entries, filename='StreamingHistoryCombined'):
+
+    objects = []
+
+    for entry in entries:
+        objects.append(
+            {
+                "endTime": entry.datetime_played.strftime('%Y-%m-%d %H:%M'),
+                "artistName": entry.artist_name,
+                "trackName": entry.track_name,
+                "msPlayed": entry.ms_played
+            }
+        )
+
+    objects_json = json.dumps(objects, indent=2)
+
+    with open('./files/' + filename + '.json', 'w', encoding='utf8') as jsonFile:
+        jsonFile.write(objects_json)
+        jsonFile.close()
