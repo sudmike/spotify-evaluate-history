@@ -4,7 +4,7 @@ from history_entry import HistoryEntry
 
 
 def get_entries_from_json_file(filename: str):
-    with open(('./jsonFiles/' + filename), encoding='utf8') as jsonFile:
+    with open(('./files/' + filename), encoding='utf8') as jsonFile:
         json_objects = json.load(jsonFile)
         jsonFile.close()
 
