@@ -48,3 +48,16 @@ def generate_json_file_from_entries(entries, filename='StreamingHistoryCombined'
     with open('./files/' + filename + '.json', 'w', encoding='utf8') as jsonFile:
         jsonFile.write(objects_json)
         jsonFile.close()
+
+
+def generate_filtered_json_file_from_entries(entries, filename='StreamingHistoryFiltered'):
+
+    min_listen_time_s = 30
+    min_listen_time_ms = 1000 * min_listen_time_s
+
+    filtered_entries = []
+    for entry in entries:
+        if entry.ms_played > min_listen_time_ms:
+            filtered_entries.append(entry)
+
+    generate_json_file_from_entries(filtered_entries, filename)
