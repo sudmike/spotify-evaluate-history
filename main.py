@@ -1,5 +1,5 @@
 from process_json_file import get_entries_from_json_file
-from generate_csv_file import generate_daily_listening_csv_file
+from process_csv_file import generate_daily_listening_csv_file, generate_weekly_listening_csv_file
 import eval
 
 
@@ -12,4 +12,5 @@ if __name__ == '__main__':
     # eval.evaluate_extreme_days(entries)
     # eval.evaluate_daily_average(entries)
 
-    generate_daily_listening_csv_file(entries)
+    # generate_daily_listening_csv_file(entries)
+    generate_weekly_listening_csv_file(entries)
